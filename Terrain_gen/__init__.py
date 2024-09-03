@@ -1,6 +1,7 @@
 import numpy as np
 from stl import mesh
 import noise
+import trimesh
 
 class generator:
     def __init__(self,size = 100,scale = 50, octaves = 10, persistence = 0.9, lacunarity = 5.0):
@@ -18,7 +19,7 @@ class generator:
                 z = noise.pnoise2(x / scale, y / scale, octaves=octaves,
                                 persistence=persistence, lacunarity=lacunarity)
                 vertices[x, y] = [x, y, z * 10]  # Scale the z-value for height
-
+        self.size=size
         # Now we need to create triangles for the mesh
         # Each square on the grid will have 2 triangles
         faces = []
@@ -47,29 +48,48 @@ class generator:
     def saveSTL(self,filepath):
         if ".stl" not in filepath: filepath+=".stl"
         self.terrain.save(filepath)
+    def saveObj(self,filepath):
+        self.saveSTL(filepath.replace(".obj",".stl"))
+        trimesh_mesh = trimesh.load_mesh(filepath.replace(".obj",".stl"))
+        # Save the mesh as an OBJ file
+        obj_filename = filepath.replace(".stl",".obj")
+        trimesh_mesh.export(obj_filename)
     def create_urdf(self,stl_filename, urdf_filename, link_name="terrain_link"):
         self.terrain.save(stl_filename)
-        urdf_content = f"""<?xml version="1.0"?>
-    <robot name="terrain">
-    <link name="{link_name}">
-        <visual>
-        <geometry>
-            <mesh filename="{stl_filename}" scale="1 1 1"/>
-        </geometry>
-        <material name="terrain_material">
-            <color rgba="0.8 0.8 0.8 1.0"/>
-        </material>
-        </visual>
-        <collision>
-        <geometry>
-            <mesh filename="{stl_filename}" scale="1 1 1"/>
-        </geometry>
-        </collision>
-    </link>
-    </robot>
+        urdf_content = f"""
+    <?xml version="0.0" ?>
+<robot name="plane">
+  <link name="planeLink">
+  <contact>
+      <lateral_friction value="1"/>
+  </contact>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-{self.size//2} -{self.size//2} 0" />
+       <mass value=".0"/>
+       <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-{self.size//2} -{self.size//2} 0" />
+      <geometry>
+				<mesh filename="{stl_filename}" scale="1 1 1"/>
+      </geometry>
+       <material name="white">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision concave="yes"> 
+      <origin rpy="0 0 0" xyz="-{self.size//2} -{self.size//2} 0"/>
+      <geometry>
+	 	<mesh filename="{stl_filename}" scale="1 1 1"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>
+
     """
         # Save the URDF content to a file
         with open(urdf_filename, 'w') as urdf_file:
             urdf_file.write(urdf_content)
 
         print(f"URDF file '{urdf_filename}' generated successfully.")
+
