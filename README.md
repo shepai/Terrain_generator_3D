@@ -21,3 +21,14 @@ pip install numpy-stl trimesh
     <td><img src="https://github.com/shepai/Terrain_generator_3D/blob/main/assets/example4.png?raw=true" alt="Image 4" width="200" /></td>
   </tr>
 </table>
+
+```python
+
+from Terrain_gen import generator
+
+#create generator and make an stl and then make a urdf
+test=generator(50,90,9,0.5,5)
+test.saveSTL("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/test.stl")
+test.saveObj("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/test.obj")
+test.create_urdf("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/test.stl","/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/test.urdf")
+```
