@@ -1,5 +1,5 @@
 # Terrain_generator_3D
-Terrain generator code using Perlin noise to make 3D STL models that can be used in simulations easily
+Terrain generator code using Perlin noise to make 3D STL models that can be used in simulations easily. These can be converted to urdf files that can be used in ROS or Pybullet simulations. 
 
 ## Dependencies 
 
