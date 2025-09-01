@@ -64,8 +64,9 @@ class generator:
             phi = 0
             z6 += A1 * np.sin(f1 * x) + A2 * np.sin(f2 * y + phi)
         Zs=[z1,z2,z3,z4,z5,z6]
-        for z in Zs:
-            self.export_surface_to_solid_block(x, y, z, filename='temp.stl')
+        f=filename.split(".")
+        for i,z in enumerate(Zs):
+            self.export_surface_to_solid_block(x, y, z, filename=f[0]+str(i)+f[1])
     def surface_to_stl(self,x, y, z, filename='output.stl', height_offset=0):
         # Flatten the meshgrid and shift z if needed
         vertices = np.column_stack((x.ravel(), y.ravel(), z.ravel() + height_offset))
@@ -226,7 +227,7 @@ class generator:
 
 if __name__=="__main__":
     test=generator(size = 100)
-    test.generateTactileData()
+    test.generateTactileData("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.stl")
     #test.saveSTL("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.stl")
     #test.saveObj("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.obj")
     test.create_urdf("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.stl","/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.urdf")
