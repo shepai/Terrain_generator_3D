@@ -7,6 +7,7 @@ Terrain generator code using Perlin noise to make 3D STL models that can be used
 pip install noise
 pip install numpy-stl
 pip install numpy-stl trimesh
+pip install scipy
 ```
 
 ## Examples
@@ -27,8 +28,13 @@ pip install numpy-stl trimesh
 from Terrain_gen import generator
 
 #create generator and make an stl and then make a urdf
-test=generator(size = 100,scale = 50, octaves = 10, persistence = 0.9, lacunarity = 5.0)
-test.saveSTL("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/test.stl")
-test.saveObj("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/test.obj")
+test=generator(size = 100)
+filename="/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/test.stl"
+test.generateNoise(filename,scale = 50, octaves = 10, persistence = 0.9, lacunarity = 5.0)
 test.create_urdf("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/test.stl","/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/test.urdf")
+
+#or generate the tactile dataset
+test.generateTactileData(scale = 50, octaves = 10, persistence = 0.9, lacunarity = 5.0)
+test.create_urdf("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/temp.stl","/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/test.urdf")
+
 ```
