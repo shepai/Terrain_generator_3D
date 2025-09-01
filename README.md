@@ -34,7 +34,7 @@ test.generateNoise(filename,scale = 50, octaves = 10, persistence = 0.9, lacunar
 test.create_urdf("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/test.stl","/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/test.urdf")
 
 #or generate the tactile dataset
-test.generateTactileData(scale = 50, octaves = 10, persistence = 0.9, lacunarity = 5.0)
+test.generateTactileData(filename)
 test.create_urdf("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/temp.stl","/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/test.urdf")
 
 ```
