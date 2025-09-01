@@ -14,8 +14,8 @@ class generator:
          # Create an empty grid for the vertices
          self.size=size
     def generateTactileData(self,filename):
-        x_vals = np.arange(0, 6 * np.radians(self.size) +0.5, 0.1)
-        y_vals = np.arange(0, 6 * np.radians(self.size) + 1.2, 0.1)
+        x_vals = np.arange(0, 6 * self.size +0.5, 0.1)
+        y_vals = np.arange(0, 6 * self.size + 1.2, 0.1)
         x, y = np.meshgrid(x_vals, y_vals)
         # z1
         A1 = 1
@@ -66,7 +66,7 @@ class generator:
         Zs=[z1,z2,z3,z4,z5,z6]
         f=filename.split(".")
         for i,z in enumerate(Zs):
-            self.export_surface_to_solid_block(x, y, z, filename=f[0]+str(i)+f[1])
+            self.export_surface_to_solid_block(x, y, z, filename=f[0]+str(i)+"."+f[1])
     def surface_to_stl(self,x, y, z, filename='output.stl', height_offset=0):
         # Flatten the meshgrid and shift z if needed
         vertices = np.column_stack((x.ravel(), y.ravel(), z.ravel() + height_offset))
