@@ -71,14 +71,14 @@ class generator:
         # Flatten the meshgrid and shift z if needed
         vertices = np.column_stack((x.ravel(), y.ravel(), z.ravel() + height_offset))
         
-        # Create faces using row and column indexing
+        """# Create faces using row and column indexing
         n_rows, n_cols = x.shape
         faces = []
         for i in range(n_rows - 1):
             for j in range(n_cols - 1):
                 idx = i * n_cols + j
                 faces.append([idx, idx + 1, idx + n_cols])
-                faces.append([idx + 1, idx + n_cols + 1, idx + n_cols])
+                faces.append([idx + 1, idx + n_cols + 1, idx + n_cols])"""
         
         # Convert to numpy arrays
         faces = np.array(faces)
@@ -187,7 +187,7 @@ class generator:
         obj_filename = filepath.replace(".stl",".obj")
         trimesh_mesh.export(obj_filename)
     def create_urdf(self,stl_filename, urdf_filename, link_name="terrain_link"):
-        self.terrain.save(stl_filename)
+        #self.terrain.save(stl_filename)
         urdf_content = f"""
     <?xml version="0.0" ?>
 <robot name="plane">
@@ -226,8 +226,8 @@ class generator:
         print(f"URDF file '{urdf_filename}' generated successfully.")
 
 if __name__=="__main__":
-    test=generator(size = 100)
+    test=generator(size = 5)
     test.generateTactileData("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.stl")
     #test.saveSTL("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.stl")
     #test.saveObj("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.obj")
-    test.create_urdf("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.stl","/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.urdf")
+    test.create_urdf("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile_0.stl","/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.urdf")
