@@ -71,14 +71,14 @@ class generator:
         # Flatten the meshgrid and shift z if needed
         vertices = np.column_stack((x.ravel(), y.ravel(), z.ravel() + height_offset))
         
-        """# Create faces using row and column indexing
+        # Create faces using row and column indexing
         n_rows, n_cols = x.shape
         faces = []
         for i in range(n_rows - 1):
             for j in range(n_cols - 1):
                 idx = i * n_cols + j
                 faces.append([idx, idx + 1, idx + n_cols])
-                faces.append([idx + 1, idx + n_cols + 1, idx + n_cols])"""
+                faces.append([idx + 1, idx + n_cols + 1, idx + n_cols])
         
         # Convert to numpy arrays
         faces = np.array(faces)
@@ -106,41 +106,9 @@ class generator:
         tri = Delaunay(np.column_stack((x_flat, y_flat)))
         top_faces = tri.simplices
 
-        # Create bottom vertices (same x, y, but lowered z)
-        bottom_vertices = np.column_stack((x_flat, y_flat, np.full_like(z_flat, z.min() - thickness)))
-
-        # Join vertices
-        vertices = np.vstack((top_vertices, bottom_vertices))
-        n_points = len(top_vertices)
-
-        # Top and bottom faces
-        bottom_faces = tri.simplices[:, ::-1] + n_points  # flip to keep normal consistent
-
-        # --- Find boundary edges (edges belonging to only 1 triangle) ---
-        edge_count = {}
-        for face in tri.simplices:
-            for i in range(3):
-                a, b = sorted((face[i], face[(i + 1) % 3]))
-                edge = (a, b)
-                edge_count[edge] = edge_count.get(edge, 0) + 1
-
-        boundary_edges = [edge for edge, count in edge_count.items() if count == 1]
-
-        # Side faces (two triangles per boundary edge)
-        side_faces = []
-        for a, b in boundary_edges:
-            a_bot = a + n_points
-            b_bot = b + n_points
-            # Triangle 1: a, b, b_bot
-            side_faces.append([a, b, b_bot])
-            # Triangle 2: a, b_bot, a_bot
-            side_faces.append([a, b_bot, a_bot])
-
-        # Combine all faces
-        faces = np.vstack((top_faces, bottom_faces, side_faces))
 
         # Export as mesh
-        mesh = trimesh.Trimesh(vertices=vertices, faces=faces, process=True)
+        mesh = trimesh.Trimesh(vertices=top_vertices, faces=top_faces, process=True)
         mesh.export(filename)
         print(f"Exported watertight solid block to {filename}")
     def generateNoise(self,filename,scale = 50, octaves = 10, persistence = 0.9, lacunarity = 5.0):
@@ -203,7 +171,7 @@ class generator:
     <visual>
       <origin rpy="0 0 0" xyz="-{self.size//2} -{self.size//2} 0" />
       <geometry>
-				<mesh filename="{stl_filename}" scale="1 1 1"/>
+				<mesh filename="{stl_filename}" scale="0.05 0.05 0.05"/>
       </geometry>
        <material name="white">
         <color rgba="1 1 1 1"/>
@@ -212,7 +180,7 @@ class generator:
     <collision concave="yes"> 
       <origin rpy="0 0 0" xyz="-{self.size//2} -{self.size//2} 0"/>
       <geometry>
-	 	<mesh filename="{stl_filename}" scale="1 1 1"/>
+	 	<mesh filename="{stl_filename}" scale="0.05 0.05 0.05"/>
       </geometry>
     </collision>
   </link>
@@ -226,8 +194,8 @@ class generator:
         print(f"URDF file '{urdf_filename}' generated successfully.")
 
 if __name__=="__main__":
-    test=generator(size = 5)
+    test=generator(size = 10)
     test.generateTactileData("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.stl")
     #test.saveSTL("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.stl")
     #test.saveObj("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.obj")
-    test.create_urdf("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile_0.stl","/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.urdf")
+    test.create_urdf("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile0.stl","/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.urdf")
