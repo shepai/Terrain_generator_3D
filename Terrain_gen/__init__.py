@@ -164,12 +164,12 @@ class generator:
       <lateral_friction value="1"/>
   </contact>
     <inertial>
-      <origin rpy="0 0 0" xyz="-{self.size//2} -{self.size//2} 0" />
+      <origin xyz="X Y Z" rpy="0 0 0"/>
        <mass value=".0"/>
        <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-{self.size//2} -{self.size//2} 0" />
+      <origin xyz="X Y Z" rpy="0 0 0"/>
       <geometry>
 				<mesh filename="{stl_filename}" scale="0.05 0.05 0.05"/>
       </geometry>
@@ -178,7 +178,7 @@ class generator:
       </material>
     </visual>
     <collision concave="yes"> 
-      <origin rpy="0 0 0" xyz="-{self.size//2} -{self.size//2} 0"/>
+      <origin xyz="X Y Z" rpy="0 0 0"/>
       <geometry>
 	 	<mesh filename="{stl_filename}" scale="0.05 0.05 0.05"/>
       </geometry>
@@ -194,7 +194,7 @@ class generator:
         print(f"URDF file '{urdf_filename}' generated successfully.")
 
 if __name__=="__main__":
-    test=generator(size = 10)
+    test=generator(size = 12)
     test.generateTactileData("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.stl")
     #test.saveSTL("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.stl")
     #test.saveObj("/its/home/drs25/Documents/GitHub/Terrain_generator_3D/assets/tactile.obj")
